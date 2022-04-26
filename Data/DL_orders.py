@@ -32,6 +32,7 @@ def get_orders_info(orders, GS_session, SZ_session):
                         order.apr_arrival_date = inf["orderDates"]["arrivalToReceiver"]
                         order.dest_city = inf["arrival"]["city"]
                         order.price = str(inf["totalSum"])
+                        order.is_paid = "Оплачено" if inf["isPaid"] else "Нужна оплата"
 
                     main_orders.remove(orderId)
             return main_orders, reserve_orders

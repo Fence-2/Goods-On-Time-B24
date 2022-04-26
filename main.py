@@ -23,6 +23,7 @@ def convert_to_table(additional_fields):
             result[i - k].append(orders[track].dest_city)
         if "Стоимость доставки" in additional_fields:
             result[i - k].append(orders[track].price)
+        result[i - k].append(orders[track].is_paid)
     result_unknown = sorted(list(filter(lambda x: x[2] == "Неизв", result)), key=lambda y: y[1])
     result_100 = sorted(list(filter(lambda x: x[2] != "Неизв" and int(x[2][:-1]) == 100, result)), key=lambda y: y[1])
     result_not_100 = sorted(list(filter(lambda x: x[2] != "Неизв" and int(x[2][:-1]) != 100, result)), key=lambda y: int(y[2][:-1]), reverse=True)
@@ -39,7 +40,7 @@ def launch_scan(additional_fields=None):
     DL.get_orders_info(orders, GS_session, SZ_session)
     try:
         orders_table = PrettyTable()
-        orders_table.field_names = ["Трек-номер", "Заказ B24", "Прогресс"] + additional_fields
+        orders_table.field_names = ["Трек-номер", "Заказ B24", "Прогресс"] + additional_fields + ["Оплата",]
         orders_table.add_rows(convert_to_table(additional_fields))
         print(orders_table)
     except Exception as e:
