@@ -39,7 +39,7 @@ def launch_scan(additional_fields=None):
     DL.get_orders_info(orders, GS_session, SZ_session)
     try:
         orders_table = PrettyTable()
-        orders_table.field_names = ["Трек-номер", "Заказ B24", "Прогресс", "Стоимость доставки"] + additional_fields + ["Оплата",]
+        orders_table.field_names = ["Трек-номер", "Заказ B24", "Прогресс",] + additional_fields + ["Стоимость доставки", "Оплата",]
         orders_table.add_rows(convert_to_table(additional_fields))
         print(orders_table)
     except Exception as e:
