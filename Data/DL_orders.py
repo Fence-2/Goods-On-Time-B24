@@ -1,6 +1,8 @@
 import sys
 import time
 
+import requests
+
 from Data.DL_api import Api
 from Data.config import *
 from tqdm import tqdm
@@ -62,3 +64,32 @@ if __name__ == "__main__":
 
     GS_session.disconnect()
     SZ_session.disconnect()
+
+
+
+def get_balances():
+    api_GS = Api(tokens[0], login=users[0][0], password=users[0][1])
+    api_SZ = Api(tokens[0], login=users[1][0], password=users[1][1])
+
+    result = list()
+    for api in [api_GS, api_SZ]:
+        r = requests.post("https://api.dellin.ru/v2/counteragents.json", json={
+            "appkey": tokens[0],
+            "sessionID": api.sessionID,
+            "fullInfo": True
+        })
+
+        counteragents = r.json()["data"]["counteragents"]
+
+        for cntragent in counteragents:
+            item = dict()
+            item["name"] = cntragent["name"]
+            item["balance"] = cntragent["balance"]["closing"]["sum"]
+            item["balance_date"] = cntragent["balance"]["closing"]["date"]
+
+            result.append(item)
+
+
+    api_GS.disconnect()
+    api_SZ.disconnect()
+    return result
